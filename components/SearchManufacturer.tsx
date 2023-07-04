@@ -1,14 +1,23 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import Image from 'next/image';
-import { Combobox } from '@headlessui/react'
+import { Combobox, Transition } from '@headlessui/react'
 
+import { manufacturers } from '@/constants';
 import { SearchManufacturerProps } from '@/types'
 
 
 const SearchManufacturer = ({manufacturer , setManufacturer } : SearchManufacturerProps) => {
    const [query, setquery] = useState('');
+
+
+  const filteredManufacturers = query === "" ? manufacturers : manufacturers.filter((item) => (
+    item.toLowerCase()
+      .replace(/\s+/g, "")
+      .includes(query.toLowerCase().replace(/\s+/g, ""))
+  ));
+  
 
   return (
     <div className="search-manufacturer">
@@ -32,8 +41,44 @@ const SearchManufacturer = ({manufacturer , setManufacturer } : SearchManufactur
                      onChange={(e) => setquery(e.target.value)}
                    />
 
-                   
+                  <Transition
+                   as={Fragment}
+                   leave="transition ease-in duration-100"
+                   leaveFrom="opacity-100"
+                   leaveTo="opacity-0"
+                   afterLeave={() => setquery('')}
+ 
+                  >
+                    <Combobox.Options>
+              
 
+                    {filteredManufacturers.length === 0 && query !== "" && (
+                        <Combobox.Option
+                         value={query}
+                         className="search-manufacturer__option">
+                            Create "{query}"
+
+                        </Combobox.Option>
+                       )
+                      
+
+
+
+
+
+
+                       (
+                          filteredManufacturers.map((item) => (
+                            <Combobox.Option 
+                              key={item}
+                              className={({ active }) => `relative search manufacturer__option ${active ? 'bg-primary-blue text-white' : 'text-grey-900'}`}
+                              value={item} >
+                                {item}
+                              </Combobox.Option>
+                          )))}
+                    </Combobox.Options>
+                  
+                  </Transition>                   
 
             </div>
         </Combobox>
