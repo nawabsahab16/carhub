@@ -5,7 +5,7 @@ export async function fetchCars() {
 	}
 
 
- const response = await fetch ('https://cars-by-api-ninjas.p.rapidapi.com/v1/cars' , { headers : headers ,});
+ const response = await fetch ('https://cars-by-api-ninjas.p.rapidapi.com/v1/cars?model=carolla', { headers:headers,});
 
 
  const result = await response.json();
